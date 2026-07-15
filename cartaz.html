@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Cartaz - Reserva de Veículos</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #e9ecef;
+        }
+        .poster {
+            /* Tamanho exato de uma folha A4 */
+            width: 210mm;
+            height: 297mm;
+            background: white;
+            box-sizing: border-box;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            border: 15px solid #004aad;
+            padding: 40px;
+        }
+        
+        /* Detalhe de cor no topo e em baixo */
+        .poster::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 15px;
+            background-color: #f26522;
+        }
+        .poster::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            height: 15px;
+            background-color: #f26522;
+        }
+
+        .header {
+            margin-top: 40px;
+        }
+
+        .logo {
+            max-width: 350px;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            color: #004aad;
+            font-size: 3.5rem;
+            margin: 0;
+            text-transform: uppercase;
+            font-weight: 900;
+            letter-spacing: 2px;
+        }
+
+        h2 {
+            color: #f26522;
+            font-size: 2rem;
+            margin: 10px 0 0 0;
+            font-weight: 600;
+        }
+
+        .middle {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex-grow: 1;
+        }
+
+        .qr-wrapper {
+            background: #fff;
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,74,173,0.15);
+            border: 3px solid #004aad;
+            margin-bottom: 30px;
+        }
+
+        .qr-code {
+            width: 380px;
+            height: 380px;
+            display: block;
+        }
+
+        .instruction {
+            font-size: 1.8rem;
+            color: #333;
+            font-weight: bold;
+            line-height: 1.4;
+            margin: 0 40px;
+        }
+
+        .instruction span {
+            color: #004aad;
+        }
+
+        .footer {
+            margin-bottom: 20px;
+            color: #777;
+            font-size: 1.2rem;
+            border-top: 2px dashed #ccc;
+            padding-top: 20px;
+            width: 80%;
+        }
+
+        /* Configuração perfeita para a impressora */
+        @media print {
+            body {
+                background: white;
+                margin: 0;
+                padding: 0;
+            }
+            .poster {
+                box-shadow: none;
+                width: 210mm;
+                height: 297mm;
+                border: none;
+                padding: 0;
+            }
+            @page {
+                size: A4;
+                margin: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="poster">
+        <div class="header">
+            <!-- Caminho para a logo que usamos no sistema -->
+            <img src="APP/static/APP/images/logo.png" alt="Intalog Logo" class="logo">
+            <h1>Sistema de Frota</h1>
+            <h2>Agendamento de Veículos</h2>
+        </div>
+        
+        <div class="middle">
+            <div class="qr-wrapper">
+                <!-- Caminho para o QRCode -->
+                <img src="QRCode.png" alt="QR Code" class="qr-code">
+            </div>
+            
+            <p class="instruction">
+                Abra a câmera do seu celular e<br>aponte para o <span>QR Code</span> para<br>reservar o seu veículo.
+            </p>
+        </div>
+
+        <div class="footer">
+            Acesso exclusivo para colaboradores autorizados.
+        </div>
+    </div>
+</body>
+</html>
