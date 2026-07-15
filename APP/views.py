@@ -64,8 +64,10 @@ def dashboard(request, ano=None, mes=None):
 @login_required
 def detalhe_reuniao(request, pk):
     reuniao = get_object_or_404(ReservaVeiculo, pk=pk)
+    pode_apagar = date.today() <= reuniao.data_retirada
     context = {
-        'reuniao': reuniao
+        'reuniao': reuniao,
+        'pode_apagar': pode_apagar
     }
     return render(request, 'APP/detalhe_reuniao.html', context)
 
@@ -195,6 +197,10 @@ def apagar_agendamento(request, pk):
 
     if request.user != reuniao.solicitante:
         messages.error(request, 'Você não tem permissão para apagar este agendamento.')
+        return redirect('detalhe_reuniao', pk=reuniao.pk)
+
+    if date.today() > reuniao.data_retirada:
+        messages.error(request, 'Não é possível apagar uma reserva após a data de retirada ter passado.')
         return redirect('detalhe_reuniao', pk=reuniao.pk)
 
     if request.method == 'POST':
