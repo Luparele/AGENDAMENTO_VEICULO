@@ -11,8 +11,8 @@ class AgendamentoForm(forms.ModelForm):
             'veiculo': forms.Select(attrs={'class': 'form-select'}),
             'destino': forms.TextInput(attrs={'class': 'form-control'}),
             'motivo': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
-            'data_retirada': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
-            'data_devolucao': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+            'data_retirada': forms.DateInput(format='%Y-%m-%d', attrs={'type': 'date', 'class': 'form-control'}),
+            'data_devolucao': forms.DateInput(format='%Y-%m-%d', attrs={'type': 'date', 'class': 'form-control'}),
         }
 
     def clean(self):
