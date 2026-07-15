@@ -1,0 +1,204 @@
+/* Definindo as cores da Intalog como variáveis */
+:root {
+    --intalog-blue: #004aad; 
+    --intalog-orange: #f26522; 
+}
+
+/* --- Barra de Navegação --- */
+
+.navbar {
+    /* Voltando ao azul royal sólido */
+    background-color: var(--intalog-blue);
+    /* Adicionando um preenchimento vertical para a barra não ficar muito fina */
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+}
+
+/* Remove o padding padrão do link da marca para nosso container controlar o espaço */
+.navbar-brand {
+    padding: 0;
+}
+
+/*
+ * ESTILO DO CONTAINER DO LOGO (A NOVA ABORDAGEM)
+ */
+.logo-container {
+    background-color: #fff;            /* Fundo branco como solicitado */
+    padding: 8px 12px;                  /* Espaçamento interno para o logo "respirar" */
+    border-radius: 8px;                 /* Cantos arredondados */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2); /* Sombra para dar profundidade e destacar do fundo */
+    display: inline-flex;               /* Alinha o conteúdo interno */
+    align-items: center;                /* Centraliza o logo verticalmente */
+}
+
+.navbar-logo {
+    max-height: 35px; /* Altura máxima da imagem do logo */
+    width: auto;
+}
+
+/* --- Botões Principais (Azul Intalog) --- */
+.btn-primary {
+    background-color: var(--intalog-blue);
+    border-color: var(--intalog-blue);
+}
+
+.btn-primary:hover {
+    background-color: #003a8c; 
+    border-color: #003a8c;
+}
+
+/* --- Botões de Destaque (Laranja Intalog) --- */
+.btn-warning {
+    background-color: var(--intalog-orange);
+    border-color: var(--intalog-orange);
+    color: #fff;
+}
+
+.btn-warning:hover {
+    background-color: #d9541a; 
+    border-color: #d9541a;
+    color: #fff;
+}
+
+.btn-outline-warning {
+    border-color: var(--intalog-orange);
+    color: var(--intalog-orange);
+}
+
+.btn-outline-warning:hover {
+    background-color: var(--intalog-orange);
+    color: #fff;
+}
+
+/* --- Badges (Laranja Intalog) --- */
+.badge.bg-warning {
+    background-color: var(--intalog-orange) !important; 
+}
+
+/*
+ * ESTILOS DO CALENDÁRIO
+ */
+.calendar th, .calendar td {
+    vertical-align: middle;
+    width: 14.28%; /* 100% / 7 dias */
+    height: 50px;
+}
+
+.calendar-day {
+    cursor: pointer;
+    position: relative;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.calendar-day:hover {
+    background-color: #e9ecef; /* Um cinza claro no hover */
+}
+
+/* Dia de hoje */
+.calendar-day.today {
+    background-color: var(--intalog-orange);
+    color: #fff;
+    font-weight: bold;
+}
+
+/* Dia selecionado pelo usuário */
+.calendar-day.active {
+    background-color: var(--intalog-blue);
+    color: #fff;
+    font-weight: bold;
+}
+
+/* Alerta visual para dias com agendamento */
+.calendar-day.has-meetings::after {
+    content: '';
+    display: block;
+    position: absolute;
+    bottom: 5px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: var(--intalog-blue);
+}
+
+/* Ajusta a cor do alerta para o dia de hoje e o dia ativo */
+.calendar-day.today.has-meetings::after,
+.calendar-day.active.has-meetings::after {
+    background-color: #fff;
+}
+
+.calendar-day-empty {
+    background-color: #f8f9fa; /* Um cinza bem clarinho para dias vazios */
+}
+
+/*
+ * ESTILO PARA A LISTA DE REUNIÕES COM SCROLL
+ */
+.scrollable-list {
+    /* Define uma altura máxima. Quando o conteúdo passar disso, o scroll aparece. */
+    /* Este valor pode ser ajustado conforme a preferência visual. */
+    max-height: 480px; 
+    
+    /* Adiciona a barra de rolagem vertical apenas quando o conteúdo exceder a altura máxima. */
+    overflow-y: auto;
+    
+    /* Um pequeno preenchimento à direita para a barra de rolagem não ficar colada no conteúdo. */
+    padding-right: 10px;
+}
+
+/* Ajustes para a barra de rolagem (opcional, mas melhora a aparência em navegadores Webkit como Chrome/Edge) */
+.scrollable-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.scrollable-list::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.scrollable-list::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 10px;
+}
+
+.scrollable-list::-webkit-scrollbar-thumb:hover {
+  background: #aaa;
+}
+
+/*
+ * ESTILOS PARA A BARRA DE SEGURANÇA DA SENHA
+ */
+#password-strength-bar-container {
+    height: 10px;
+    width: 100%;
+    background-color: #e9ecef;
+    border-radius: 5px;
+    margin-top: 5px;
+    overflow: hidden; /* Garante que a barra interna não ultrapasse as bordas arredondadas */
+}
+
+#password-strength-bar {
+    height: 100%;
+    width: 0%; /* Começa com 0% de largura */
+    transition: width 0.3s ease-in-out, background-color 0.3s ease-in-out;
+}
+
+/* Cores para os diferentes níveis de segurança */
+.strength-weak { background-color: #dc3545; } /* Vermelho */
+.strength-medium { background-color: #ffc107; } /* Amarelo */
+.strength-strong { background-color: #198754; } /* Verde */
+.strength-very-strong { background-color: #0d6efd; } /* Azul Intalog */
+
+
+/* Estilos para a lista de dicas de senha */
+#password-hints ul {
+    font-size: 0.875rem; /* Fonte um pouco menor */
+    color: #6c757d; /* Cinza */
+    padding-left: 1.2rem; /* Alinha a lista com o texto do formulário */
+}
+
+#password-hints li.valid {
+    color: #198754; /* Verde para requisitos cumpridos */
+    text-decoration: line-through; /* Tacha o requisito */
+}

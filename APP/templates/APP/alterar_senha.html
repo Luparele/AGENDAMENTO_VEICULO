@@ -1,0 +1,161 @@
+{% extends 'APP/base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+        <div class="card shadow-sm">
+            <div class="card-header">
+                <h3>Alterar Senha</h3>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.old_password.id_for_label }}" class="form-label">{{ form.old_password.label }}</label>
+                        {{ form.old_password }}
+                        {% if form.old_password.errors %}<div class="text-danger small mt-1">{{ form.old_password.errors|striptags }}</div>{% endif %}
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="{{ form.new_password1.id_for_label }}" class="form-label">{{ form.new_password1.label }}</label>
+                        {{ form.new_password1 }}
+                        {% if form.new_password1.errors %}<div class="text-danger small mt-1">{{ form.new_password1.errors|striptags }}</div>{% endif %}
+                        
+                        <div id="password-strength-bar-container">
+                            <div id="password-strength-bar"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.new_password2.id_for_label }}" class="form-label">{{ form.new_password2.label }}</label>
+                        {{ form.new_password2 }}
+                        {% if form.new_password2.errors %}<div class="text-danger small mt-1">{{ form.new_password2.errors|striptags }}</div>{% endif %}
+
+                        <div id="password-match-message" class="small mt-1"></div>
+                    </div>
+                    
+                    <hr>
+
+                    <div id="password-hints">
+                        <p class="form-text">Sua senha deve conter:</p>
+                        <ul>
+                            <li id="hint-length">Pelo menos 8 caracteres</li>
+                            <li id="hint-lowercase">Uma letra minúscula</li>
+                            <li id="hint-uppercase">Uma letra maiúscula</li>
+                            <li id="hint-number">Um número</li>
+                            <li id="hint-special">Um caractere especial (ex: !@#$%)</li>
+                        </ul>
+                    </div>
+
+                    <div class="d-flex justify-content-end mt-3">
+                        <button type="submit" class="btn btn-primary" id="btn-salvar-senha" disabled>Salvar Nova Senha</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const newPassword1 = document.getElementById('{{ form.new_password1.id_for_label }}');
+    const newPassword2 = document.getElementById('{{ form.new_password2.id_for_label }}');
+    const matchMessage = document.getElementById('password-match-message');
+    const strengthBar = document.getElementById('password-strength-bar');
+    const saveButton = document.getElementById('btn-salvar-senha');
+
+    // Dicas de Senha
+    const hintLength = document.getElementById('hint-length');
+    const hintLowercase = document.getElementById('hint-lowercase');
+    const hintUppercase = document.getElementById('hint-uppercase');
+    const hintNumber = document.getElementById('hint-number');
+    const hintSpecial = document.getElementById('hint-special');
+
+    // Funções de verificação
+    const checkPasswordStrength = () => {
+        const password = newPassword1.value;
+        let score = 0;
+        
+        // Critério 1: Comprimento
+        const hasLength = password.length >= 8;
+        if (hasLength) score++;
+        hintLength.classList.toggle('valid', hasLength);
+
+        // Critério 2: Letra minúscula
+        const hasLowercase = /[a-z]/.test(password);
+        if (hasLowercase) score++;
+        hintLowercase.classList.toggle('valid', hasLowercase);
+        
+        // Critério 3: Letra maiúscula
+        const hasUppercase = /[A-Z]/.test(password);
+        if (hasUppercase) score++;
+        hintUppercase.classList.toggle('valid', hasUppercase);
+        
+        // Critério 4: Número
+        const hasNumber = /[0-9]/.test(password);
+        if (hasNumber) score++;
+        hintNumber.classList.toggle('valid', hasNumber);
+
+        // Critério 5: Caractere especial
+        const hasSpecial = /[^A-Za-z0-9]/.test(password);
+        if (hasSpecial) score++;
+        hintSpecial.classList.toggle('valid', hasSpecial);
+
+        // Atualiza a barra de segurança
+        strengthBar.className = ''; // Limpa classes antigas
+        if (score === 1) {
+            strengthBar.style.width = '20%';
+            strengthBar.classList.add('strength-weak');
+        } else if (score === 2) {
+            strengthBar.style.width = '40%';
+            strengthBar.classList.add('strength-weak');
+        } else if (score === 3) {
+            strengthBar.style.width = '60%';
+            strengthBar.classList.add('strength-medium');
+        } else if (score === 4) {
+            strengthBar.style.width = '80%';
+            strengthBar.classList.add('strength-strong');
+        } else if (score >= 5) {
+            strengthBar.style.width = '100%';
+            strengthBar.classList.add('strength-very-strong');
+        } else {
+            strengthBar.style.width = '0%';
+        }
+        
+        return score >= 5; // Retorna true se a senha for forte o suficiente
+    };
+
+    const checkPasswordMatch = () => {
+        const pass1 = newPassword1.value;
+        const pass2 = newPassword2.value;
+
+        if (pass2.length === 0) {
+            matchMessage.textContent = '';
+            return false;
+        }
+
+        if (pass1 === pass2) {
+            matchMessage.textContent = 'As senhas coincidem.';
+            matchMessage.className = 'small mt-1 text-success';
+            return true;
+        } else {
+            matchMessage.textContent = 'As senhas não coincidem.';
+            matchMessage.className = 'small mt-1 text-danger';
+            return false;
+        }
+    };
+
+    const validateForm = () => {
+        const isStrong = checkPasswordStrength();
+        const isMatching = checkPasswordMatch();
+        // Habilita o botão apenas se a senha for forte E as duas senhas coincidirem
+        saveButton.disabled = !(isStrong && isMatching);
+    };
+
+    // Adiciona os "escutadores" de eventos
+    newPassword1.addEventListener('input', validateForm);
+    newPassword2.addEventListener('input', validateForm);
+});
+</script>
+{% endblock %}

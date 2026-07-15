@@ -1,0 +1,33 @@
+{% extends 'APP/base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+        <div class="card shadow-sm">
+            <div class="card-header">
+                <h3>Cadastrar Novo Usuário</h3>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="nome_completo" class="form-label">Nome Completo</label>
+                        <input type="text" name="nome_completo" class="form-control" id="nome_completo" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="username" class="form-label">Nome de Usuário (Login)</label>
+                        <input type="text" name="username" class="form-control" id="username" required>
+                    </div>
+                    <div class="form-text mb-3">
+                        A senha inicial será "<strong>mudarsenha</strong>". O usuário será forçado a alterá-la no primeiro login.
+                    </div>
+                    <div class="d-flex justify-content-end">
+                        <a href="{% url 'dashboard' %}" class="btn btn-secondary me-2">Cancelar</a>
+                        <button type="submit" class="btn btn-primary">Cadastrar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

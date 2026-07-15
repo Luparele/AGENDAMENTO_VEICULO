@@ -1,0 +1,158 @@
+{% extends 'APP/base.html' %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 id="titulo-principal">Reservas de Veículos</h2>
+    <a href="{% url 'novo_agendamento' %}" class="btn btn-primary"><i class="bi bi-plus-circle"></i> Nova Reserva</a>
+</div>
+
+<div class="row">
+    <div class="col-md-5 order-md-2 mb-4 mb-md-0">
+        <div class="card shadow-sm">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <a href="{% url 'dashboard_mes' ano=navegacao.mes_anterior.ano mes=navegacao.mes_anterior.mes %}" class="btn btn-outline-secondary btn-sm">&lt;</a>
+                <h5 class="mb-0">{{ navegacao.mes_ano_display }}</h5>
+                <a href="{% url 'dashboard_mes' ano=navegacao.proximo_mes.ano mes=navegacao.proximo_mes.mes %}" class="btn btn-outline-secondary btn-sm">&gt;</a>
+            </div>
+            <div class="card-body p-2">
+                <table class="table table-bordered text-center calendar">
+                    <thead>
+                        <tr>
+                            {% for dia_semana in dias_semana %}
+                                <th>{{ dia_semana }}</th>
+                            {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for semana in calendario %}
+                        <tr>
+                            {% for dia in semana %}
+                                {% if dia == 0 %}
+                                    <td class="calendar-day-empty"></td>
+                                {% else %}
+                                    {% with dia_str=dia|stringformat:"02d" %}
+                                    <td 
+                                        class="calendar-day 
+                                            {% if dia == hoje.day and mes_atual == hoje.month and ano_atual == hoje.year %}today{% endif %}" 
+                                        data-date="{{ ano_atual }}-{{ mes_atual|stringformat:"02d" }}-{{ dia_str }}">
+                                        <div class="d-flex flex-column align-items-center">
+                                            <span>{{ dia }}</span>
+                                            <div class="mt-1 d-flex gap-1" style="font-size: 0.8rem;">
+                                                {% if dia in dias_retirada %}
+                                                    <i class="bi bi-car-front-fill text-danger" title="Retirada"></i>
+                                                {% endif %}
+                                                {% if dia in dias_devolucao %}
+                                                    <i class="bi bi-car-front-fill" style="color: darkgreen;" title="Devolução"></i>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </td>
+                                    {% endwith %}
+                                {% endif %}
+                            {% endfor %}
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <div class="d-flex justify-content-center gap-4 mt-3 mb-2 small text-muted">
+                    <span><i class="bi bi-car-front-fill text-danger"></i> Retirada</span>
+                    <span><i class="bi bi-car-front-fill" style="color: darkgreen;"></i> Devolução</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-7 order-md-1">
+        <h4 id="data-selecionada-titulo">
+            {% if ano_atual == hoje.year and mes_atual == hoje.month %}
+                Reservas de Hoje ({{ hoje|date:"d/m/Y" }})
+            {% else %}
+                Selecione um dia no calendário
+            {% endif %}
+        </h4>
+        <hr>
+        <div id="lista-reunioes-container" class="scrollable-list">
+            {% for reuniao in reunioes_do_dia %}
+                <a href="{% url 'detalhe_reuniao' reuniao.pk %}" class="card-link mb-3 d-block">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ reuniao.solicitante.get_full_name|default:reuniao.solicitante.username }}</h5>
+                            <p class="card-text mb-1">
+                                <i class="bi bi-car-front-fill text-danger" title="Retirada"></i> Retirada: {{ reuniao.data_retirada|date:"d/m/Y" }} <br>
+                                <i class="bi bi-car-front-fill" style="color: darkgreen;" title="Devolução"></i> Devolução: {{ reuniao.data_devolucao|date:"d/m/Y" }}
+                            </p>
+                            <p class="card-text"><small class="text-muted">{{ reuniao.veiculo.placa }} - {{ reuniao.veiculo.modelo }} ({{ reuniao.destino }})</small></p>
+                        </div>
+                    </div>
+                </a>
+            {% empty %}
+                <div class="alert alert-info" role="alert">
+                    {% if ano_atual == hoje.year and mes_atual == hoje.month %}
+                        Nenhuma reserva para hoje.
+                    {% else %}
+                        Nenhuma reserva para este dia.
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const diasDoCalendario = document.querySelectorAll('.calendar-day');
+    const containerLista = document.getElementById('lista-reunioes-container');
+    const tituloData = document.getElementById('data-selecionada-titulo');
+
+    diasDoCalendario.forEach(diaEl => {
+        diaEl.addEventListener('click', function() {
+            const dataSelecionada = this.dataset.date;
+            const [ano, mes, dia] = dataSelecionada.split('-');
+            
+            const dataFormatada = `${dia}/${mes}/${ano}`;
+            tituloData.textContent = `Reservas de ${dataFormatada}`;
+
+            diasDoCalendario.forEach(d => d.classList.remove('active'));
+            this.classList.add('active');
+
+            fetch(`/api/reunioes/${ano}/${mes}/${dia}/`)
+                .then(response => response.json())
+                .then(data => {
+                    containerLista.innerHTML = '';
+
+                    if (data.reunioes && data.reunioes.length > 0) {
+                        data.reunioes.forEach(reuniao => {
+                            const reuniaoCardHtml = `
+                                <a href="/reuniao/${reuniao.id}/" class="card-link mb-3 d-block">
+                                    <div class="card h-100 shadow-sm">
+                                        <div class="card-body">
+                                            <h5 class="card-title">${reuniao.organizador}</h5>
+
+                                            <p class="card-text mb-1">
+                                                <i class="bi bi-car-front-fill text-danger" title="Retirada"></i> Retirada: ${reuniao.data_retirada} <br>
+                                                <i class="bi bi-car-front-fill" style="color: darkgreen;" title="Devolução"></i> Devolução: ${reuniao.data_devolucao}
+                                            </p>
+                                            <p class="card-text"><small class="text-muted">${reuniao.titulo}</small></p>
+                                        </div>
+                                    </div>
+                                </a>
+                            `;
+                            containerLista.innerHTML += reuniaoCardHtml;
+                        });
+                    } else {
+                        containerLista.innerHTML = `
+                            <div class="alert alert-info" role="alert">
+                                Nenhuma reserva para ${dataFormatada}.
+                            </div>
+                        `;
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro ao buscar reuniões:', error);
+                    containerLista.innerHTML = `<div class="alert alert-danger">Ocorreu um erro ao carregar os agendamentos.</div>`;
+                });
+        });
+    });
+});
+</script>
+{% endblock %}

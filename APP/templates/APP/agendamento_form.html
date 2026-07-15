@@ -1,0 +1,66 @@
+{% extends 'APP/base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow-sm">
+            <div class="card-header">
+                {% if edit_mode %}
+                    <h3>Editar Reserva</h3>
+                {% else %}
+                    <h3>Nova Reserva de Veículo</h3>
+                {% endif %}
+            </div>
+            <div class="card-body">
+                <form method="post" novalidate>
+                    {% csrf_token %}
+
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger">
+                            {% for error in form.non_field_errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.veiculo.id_for_label }}" class="form-label">Veículo (Nome ou Placa)</label>
+                        {{ form.veiculo }}
+                        {% if form.veiculo.errors %}<div class="text-danger small">{{ form.veiculo.errors.as_text }}</div>{% endif %}
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.destino.id_for_label }}" class="form-label">Destino</label>
+                        {{ form.destino }}
+                        {% if form.destino.errors %}<div class="text-danger small">{{ form.destino.errors.as_text }}</div>{% endif %}
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ form.data_retirada.id_for_label }}" class="form-label">Data de Retirada</label>
+                            {{ form.data_retirada }}
+                            {% if form.data_retirada.errors %}<div class="text-danger small">{{ form.data_retirada.errors.as_text }}</div>{% endif %}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ form.data_devolucao.id_for_label }}" class="form-label">Data de Devolução</label>
+                            {{ form.data_devolucao }}
+                            {% if form.data_devolucao.errors %}<div class="text-danger small">{{ form.data_devolucao.errors.as_text }}</div>{% endif %}
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="{{ form.motivo.id_for_label }}" class="form-label">Motivo da Reserva</label>
+                        {{ form.motivo }}
+                        {% if form.motivo.errors %}<div class="text-danger small">{{ form.motivo.errors.as_text }}</div>{% endif %}
+                    </div>
+
+                    <div class="d-flex justify-content-end">
+                        <a href="{% url 'dashboard' %}" class="btn btn-secondary me-2">Cancelar</a>
+                        <button type="submit" class="btn btn-primary">Salvar Reserva</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
