@@ -19,11 +19,23 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
+from dotenv import load_dotenv
+
+# Carrega as variáveis do arquivo .env
+load_dotenv(os.path.join(BASE_DIR, '.env'))
+
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-h$5es6&s_35k(mik6f2@dv4k@)-4i!@ei%zxoe7m&oj*u!9jg('
+SECRET_KEY = os.getenv('SECRET_KEY', 'chave-padrao-insegura-substitua-no-servidor')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# O padrão será False para proteger o servidor. No PC local, o .env define como True.
+DEBUG = os.getenv('DEBUG', 'False') == 'True'
+
+# HTTPS Security settings
+if not DEBUG:
+    SECURE_SSL_REDIRECT = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
 
 ALLOWED_HOSTS = ['AgendaIntalog.pythonanywhere.com', '127.0.0.1', 'localhost']
 
