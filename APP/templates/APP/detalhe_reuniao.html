@@ -8,11 +8,11 @@
     <div class="card-body">
         <h4 class="card-title text-primary"><i class="bi bi-car-front-fill"></i> {{ reuniao.veiculo.placa }} - {{ reuniao.veiculo.modelo }}</h4>
         <hr>
-        <p><strong><i class="bi bi-calendar-event"></i> Retirada:</strong> {{ reuniao.data_retirada|date:"d/m/Y" }}</p>
-        <p><strong><i class="bi bi-calendar-check-fill"></i> Devolução:</strong> {{ reuniao.data_devolucao|date:"d/m/Y" }}</p>
-        <p><strong><i class="bi bi-person-check-fill"></i> Solicitante:</strong> {{ reuniao.solicitante.get_full_name|default:reuniao.solicitante.username }}</p>
-        <p><strong><i class="bi bi-geo-alt-fill"></i> Destino:</strong> {{ reuniao.destino }}</p>
-        <p class="mt-4"><strong><i class="bi bi-card-text"></i> Motivo da Reserva:</strong></p>
+        <p><strong><i class="bi bi-calendar-event text-danger"></i> Retirada:</strong> {{ reuniao.data_retirada|date:"d/m/Y" }}</p>
+        <p><strong><i class="bi bi-calendar-check-fill" style="color: darkgreen;"></i> Devolução:</strong> {{ reuniao.data_devolucao|date:"d/m/Y" }}</p>
+        <p><strong><i class="bi bi-person-check-fill text-info"></i> Solicitante:</strong> {{ reuniao.solicitante.get_full_name|default:reuniao.solicitante.username }}</p>
+        <p><strong><i class="bi bi-geo-alt-fill text-warning"></i> Destino:</strong> {{ reuniao.destino }}</p>
+        <p class="mt-4"><strong><i class="bi bi-card-text text-secondary"></i> Motivo da Reserva:</strong></p>
         <pre class="bg-light p-2 rounded">{{ reuniao.motivo }}</pre>
     </div>
     <div class="card-footer d-flex justify-content-between align-items-center">
