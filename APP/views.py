@@ -162,6 +162,10 @@ def editar_agendamento(request, pk):
         messages.error(request, 'Você não tem permissão para editar este agendamento.')
         return redirect('detalhe_reuniao', pk=reuniao.pk)
 
+    if date.today() > reuniao.data_retirada:
+        messages.error(request, 'Não é possível editar uma reserva após a data de retirada ter passado.')
+        return redirect('detalhe_reuniao', pk=reuniao.pk)
+
     if request.method == 'POST':
         form = AgendamentoForm(request.POST, instance=reuniao)
         if form.is_valid():

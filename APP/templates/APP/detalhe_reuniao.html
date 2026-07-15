@@ -21,8 +21,8 @@
         </span>
         <div>
             {% if user == reuniao.solicitante %}
-                <a href="{% url 'editar_agendamento' reuniao.pk %}" class="btn btn-warning"><i class="bi bi-pencil-square"></i> Editar</a>
                 {% if pode_apagar %}
+                <a href="{% url 'editar_agendamento' reuniao.pk %}" class="btn btn-warning"><i class="bi bi-pencil-square"></i> Editar</a>
                 <a href="{% url 'apagar_agendamento' reuniao.pk %}" class="btn btn-danger"><i class="bi bi-trash-fill"></i> Apagar</a>
                 {% endif %}
             {% endif %}
